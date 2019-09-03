@@ -40,18 +40,26 @@ public class LoadMeta : MonoBehaviour
         System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
 
         stopwatch.Start();
-        var bytes = File.ReadAllBytes("AliciaSolid_1.10.vrm");
+        var bytes = File.ReadAllBytes(@"C:\Users\conve\Music\6170993078020739703.vrm");
         stopwatch.Stop();
         Debug.Log("ReadAllBytes: " + (float)stopwatch.Elapsed.TotalSeconds + " sec");
-        
+
         stopwatch.Restart();
-        var metaLoader = new MetaLoader(bytes);
-        var meta = metaLoader.Read();
+        var meta = new VRMMetaObject();
+        unsafe
+        {
+            fixed (byte* ptr = &bytes[0])
+            {
+                new BlazingFastMetaLoader(ptr, bytes.LongLength).ReadMeta(meta);
+            }
+        }
+        //var metaLoader = new MetaLoader(bytes);
+        //var meta = metaLoader.Read();
         stopwatch.Stop();
         Debug.Log("QuickMetaLoader: " + (float)stopwatch.Elapsed.TotalSeconds + " sec");
 
         ViewMeta(meta);
-        LoadIcon(metaLoader);
+        //LoadIcon(metaLoader);
 
         stopwatch.Restart();
         var context = new VRMImporterContext();
