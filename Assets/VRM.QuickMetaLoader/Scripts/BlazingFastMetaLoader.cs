@@ -19,7 +19,6 @@ namespace VRM.QuickMetaLoader
             this = default;
             this.bytes = bytes;
             this.length = length;
-            if (!Initialize()) throw new ArgumentException();
         }
 
         private bool Initialize()
@@ -35,6 +34,7 @@ namespace VRM.QuickMetaLoader
 
         public bool ReadMeta(VRMMetaObject metaObject)
         {
+            if (!Initialize()) throw new ArgumentException();
             var bytes0 = bytes;
             var length0 = length;
             if (!ReadExporterVersion(ref bytes0, ref length0, out var strSBytes0, out var strLength0))
